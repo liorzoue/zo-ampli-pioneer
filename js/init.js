@@ -1,34 +1,70 @@
-(function($){
-	$(function(){
+/*
+	v.0.1.0-150304
+		- Pile des requetes AJAX
+		- Ameliorations graphiques (responsive)
+		- Gestion du volume (dB / Volume affiche sur l'appareil)
+		- Correction de l'affichage des badges actifs
+		- Autres evolutions liées aux premieres versions ... :)
 
-		$('.button-collapse').sideNav();
+	v.0.0
+		- Premiere version
+		- Requetes telnet en PHP
+		- Base : Framework MaterializeCSS + AngularJS
+*/
 
-  }); // end of document ready
-})(jQuery); // end of jQuery name space
 
-
+$.AjaxQueue = function() {
+  this.reqs = [];
+  this.requesting = false;
+};
+$.AjaxQueue.prototype = {
+  add: function(req) {
+    this.reqs.push(req);
+    this.next();
+  },
+  next: function() {
+    if (this.reqs.length == 0)
+      return;
+ 
+    if (this.requesting == true)
+      return;
+ 
+    var req = this.reqs.splice(0, 1)[0];
+    var complete = req.complete;
+    var self = this;
+    if (req._run)
+      req._run(req);
+    req.complete = function() {
+      if (complete)
+        complete.apply(this, arguments);
+      self.requesting = false;
+      self.next();
+    }
+ 
+    this.requesting = true;
+    $.ajax(req);
+  }
+};
 
 var pioneerApp = angular.module('pioneerApp', []);
 
 pioneerApp.controller('AmpliCtrl', function ($scope) {
+	var queue = new $.AjaxQueue();
+
 	var get = function (command) {
-		var response = '';
-
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function() {
-
-			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-				response = xmlhttp.responseText;
-
-				response2scope(command, response);
-			} else {
-				// Erreur
+		queue.add({
+			url: 'lib/index.php?do='+command,
+			complete: function () {
+				var xmlhttp = arguments[0];
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					var ret = xmlhttp.responseText;
+					response2scope(command, ret);
+				}
 			}
-		}
-
-		xmlhttp.open("GET", 'lib/index.php?do=' + command,true);
-		xmlhttp.send();
+		})
 	};
+
+	$scope.version = '';
 	$scope.appTitle = "VSX-527";
 	$scope.video = {
 		current: '...'
@@ -36,11 +72,14 @@ pioneerApp.controller('AmpliCtrl', function ($scope) {
 	$scope.power = false;
 
 	$scope.volume = {
-		value: 0
+		isdB: true,
+		value: 0,
+		progress: 0
 	};
 
 	get('query_power');
 	get('query_input');
+	get('query_volume');
 
 	var response2scope = function (command, response) {
 
@@ -110,14 +149,26 @@ pioneerApp.controller('AmpliCtrl', function ($scope) {
 
 				*/
 				break;
+			case 'query_volume':
+				response = response.replace('0VOL', '');
+				if ($scope.volume.isdB) {
+					var val = ((parseInt(response, 10)-161)/2);
+					$scope.volume.value = val+' dB';
+				} else {
+					$scope.volume.value = (parseInt(response, 10)/2)-0.5;
+				}
+				break;
 			default:
 				break;
 		}
-
+		toast(command+':'+response, 4000)
 		$scope.$apply();
 	};
 
-
+	$scope.toggledb = function () {
+		$scope.volume.isdB = !$scope.volume.isdB;
+		get('query_volume');
+	};
 
 	$scope.togglePanel =  function (item) {
 		$scope.panelVideo = false;
@@ -125,10 +176,12 @@ pioneerApp.controller('AmpliCtrl', function ($scope) {
 
 		switch(item) {
 			case 'input':
+				get('query_input');
 				$scope.panelVideo = true;
 				break;
 			case 'volume':
 				$scope.panelVolume = true;
+				get('query_volume');
 				break;
 			default:
 				break;

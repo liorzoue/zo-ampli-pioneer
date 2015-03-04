@@ -10,7 +10,7 @@ public domain
 class PHPTelnet {
     var $show_connect_error=1;
 
-    var $use_usleep=1;  // change to 1 for faster execution
+    var $use_usleep=0;  // change to 1 for faster execution
         // don't change to 1 on Windows servers unless you have PHP 5
     var $sleeptime=125000;
     var $loginsleeptime=1000000;

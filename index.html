@@ -12,6 +12,11 @@
     .hide {
       display: none !important;
     }
+
+    .active span.badge {
+        color: #eafaf9;
+    }
+
   </style>
 </head>
 <body ng-controller="AmpliCtrl">
@@ -19,11 +24,11 @@
     <div class="container">
       <div class="nav-wrapper"><a id="logo-container" href="#" class="brand-logo">Ampli {{appTitle}}</a>
         <ul class="right">
-          <li><a href="#">Navbar Link</a></li>
+          <li><a href="https://github.com/liorzoue/zo-ampli-pioneer"><i class="mdi-file-folder-shared"></i> {{version}}</a></li>
         </ul>
 
         <ul id="nav-mobile" class="side-nav">
-          <li><a href="#">Navbar Link</a></li>
+          <li><a href="https://github.com/liorzoue/zo-ampli-pioneer"><i class="mdi-file-folder-shared"></i> {{version}}</a></li>
         </ul>
         <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
       </div>
@@ -32,47 +37,32 @@
 
   <div class="row">
 
-    <div class="col s3">
-    <!-- Grey navigation panel -->
+    <div class="col m3 s12">
       <ul class="collection">
         <a href="#!" class="collection-item">Connecté<span class="badge">{{power ? 'Oui' : 'Non'}}</span></a>
         <a href="#!" class="collection-item" ng-class="panelVideo ? 'active' : ''" ng-click="togglePanel('input')">Input<span class="badge">{{video.current}}</span></a>
-        <a href="#!" class="collection-item" ng-class="panelVolume ? 'active' : ''" ng-click="togglePanel('volume')">Volume<span class="badge">{{volume.value}}dB</span></a>
+        <a href="#!" class="collection-item" ng-class="panelVolume ? 'active' : ''" ng-click="togglePanel('volume')">Volume<span class="badge">{{volume.value}}</span></a>
       </ul>
     </div>
 
-    <div class="col s9">
-    <!-- Teal page content  -->
+    <div class="col m9 s12">
       <div class="container">
         <div class="card blue-grey darken-1" ng-class="panelVideo ? '' : 'hide'">
           <div class="card-content white-text">
-            <h3>Entrée vidéo</h3>
+            <h3><i class="mdi-action-settings-input-hdmi"></i> Entrée vidéo</h3>
             <div class="divider"></div>
             <p>
-              Lorem ipsum
+              Entrée active : {{video.current}}
+            </p>
+            <p>
+              Lorem
             </p>
           </div>
         </div>
 
         <div class="card blue-grey darken-1" ng-class="panelVolume ? '' : 'hide'">
           <div class="card-content white-text">
-            <h3>Volume</h3>
+            <h3><i class="mdi-av-hearing"></i> Volume</h3>
             <div class="divider"></div>
             <p>
-              Lorem ipsum volume
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
-
-  <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="js/materialize.js"></script>
-  <script src="js/angular.min.js"></script>
-  <script src="js/init.js"></script>
-  <script 
+              Volume actuel :
