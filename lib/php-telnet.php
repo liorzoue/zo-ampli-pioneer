@@ -137,10 +137,10 @@ class PHPTelnet {
     
     function ConnectError($num) {
         if ($this->show_connect_error) switch ($num) {
-        case 1: echo '<br />[PHP Telnet] Connect failed: Unable to open network connection<br />'; break;
-        case 2: echo '<br />[PHP Telnet] Connect failed: Unknown host<br />'; break;
-        case 3: echo '<br />[PHP Telnet] Connect failed: Login failed<br />'; break;
-        case 4: echo '<br />[PHP Telnet] Connect failed: Your server\'s PHP version is too low for PHP Telnet<br />'; break;
+        case 1: echo 'ERRPHPNET'; break; //  Connect failed: Unable to open network connection<br />
+        case 2: echo 'ERRPHPHNC'; break; // <br />[PHP Telnet] Connect failed: Unknown host<br />
+        case 3: echo 'ERRPHPLOG'; break; // <br />[PHP Telnet] Connect failed: Login failed<br />
+        case 4: echo 'ERRPHPSER'; break; // <br />[PHP Telnet] Connect failed: Your server\'s PHP version is too low for PHP Telnet<br />
         }
     }
 }

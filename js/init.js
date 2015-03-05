@@ -1,4 +1,8 @@
 /*
+	v.0.1.0-150305
+		- Gestion des erreurs dans les notifications
+		- Meilleure gestion du volume
+
 	v.0.1.0-150304
 		- Pile des requetes AJAX
 		- Ameliorations graphiques (responsive)
@@ -51,7 +55,7 @@ var pioneerApp = angular.module('pioneerApp', []);
 pioneerApp.controller('AmpliCtrl', function ($scope) {
 	var queue = new $.AjaxQueue();
 
-	var get = function (command) {
+	var get = $scope.get = function (command) {
 		queue.add({
 			url: 'lib/index.php?do='+command,
 			complete: function () {
@@ -74,7 +78,7 @@ pioneerApp.controller('AmpliCtrl', function ($scope) {
 	$scope.volume = {
 		isdB: true,
 		value: 0,
-		progress: 0
+		raw: 0
 	};
 
 	get('query_power');
@@ -82,6 +86,16 @@ pioneerApp.controller('AmpliCtrl', function ($scope) {
 	get('query_volume');
 
 	var response2scope = function (command, response) {
+		var volumeValue = function (raw) {
+			$scope.volume.raw = raw;
+
+			if ($scope.volume.isdB) {
+				var val = ((raw-161)/2);
+				$scope.volume.value = val+' dB';
+			} else {
+				$scope.volume.value = (raw/2)-0.5;
+			}
+		};
 
 		response = response.replace(/(\r\n|\n|\r)/gm,"");
 
@@ -150,18 +164,16 @@ pioneerApp.controller('AmpliCtrl', function ($scope) {
 				*/
 				break;
 			case 'query_volume':
-				response = response.replace('0VOL', '');
-				if ($scope.volume.isdB) {
-					var val = ((parseInt(response, 10)-161)/2);
-					$scope.volume.value = val+' dB';
-				} else {
-					$scope.volume.value = (parseInt(response, 10)/2)-0.5;
-				}
+			case 'volume_up':
+			case 'volume_down':
+				volumeValue(parseInt(response.replace('0VOL', ''), 10))
 				break;
 			default:
 				break;
 		}
-		toast(command+':'+response, 4000)
+		var cssClass = 'mdi-action-done green-text';
+		if (response.substring(0,3) == 'ERR') {	cssClass = 'mdi-alert-error red-text'; }
+		toast('<span><i class="'+cssClass+' right"></i> '+command+':'+response+'</span>', 4000);
 		$scope.$apply();
 	};
 
