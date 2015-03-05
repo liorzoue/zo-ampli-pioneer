@@ -21,6 +21,7 @@ $.AjaxQueue = function() {
   this.reqs = [];
   this.requesting = false;
 };
+
 $.AjaxQueue.prototype = {
   add: function(req) {
     this.reqs.push(req);
@@ -73,6 +74,35 @@ pioneerApp.controller('AmpliCtrl', function ($scope) {
 	$scope.video = {
 		current: '...'
 	};
+	$scope.inputs = [
+		{id: '04', name: 'DVD', 				icon: 'mdi-action-input'},
+		{id: '25', name: 'BD', 				icon: 'mdi-action-input'},
+		{id: '05', name: 'TV/SAT', 			icon: 'mdi-hardware-tv'},
+		{id: '15', name: 'DVR/BDR', 			icon: 'mdi-device-dvr'},
+		{id: '10', name: 'VIDEO 1', 			icon: 'mdi-action-input'},
+		{id: '14', name: 'VIDEO 2', 			icon: 'mdi-action-input'},
+		{id: '19', name: 'HDMI 1', 			icon: 'mdi-action-settings-input-hdmi'},
+		{id: '20', name: 'HDMI 2', 			icon: 'mdi-action-settings-input-hdmi'},
+		{id: '21', name: 'HDMI 3', 			icon: 'mdi-action-settings-input-hdmi'},
+		{id: '22', name: 'HDMI 4', 			icon: 'mdi-action-settings-input-hdmi'},
+		{id: '23', name: 'HDMI 5', 			icon: 'mdi-action-settings-input-hdmi'},
+		{id: '26', name: 'HOME MEDIA GALLERY(Internet Radio)', icon: 'mdi-image-camera-roll'},
+		{id: '22', name: 'HDMI 4', 			icon: 'mdi-action-settings-input-hdmi'},
+		{id: '23', name: 'HDMI 5', 			icon: 'mdi-action-settings-input-hdmi'},
+		{id: '17', name: 'iPod/USB', 		icon: 'mdi-device-usb'},
+		{id: '18', name: 'XM RADIO', 		icon: 'mdi-action-input'},
+		{id: '01', name: 'CD', 				icon: 'mdi-action-input'},
+		{id: '03', name: 'CD-R/TAPE', 		icon: 'mdi-action-input'},
+		{id: '02', name: 'TUNER', 			icon: 'mdi-av-radio'},
+		{id: '00', name: 'PHONO', 			icon: 'mdi-action-input'},
+		{id: '12', name: 'MULTI CH IN ', 	icon: 'mdi-action-settings-input-composite'},
+		{id: '33', name: 'ADAPTER PORT', 	icon: 'mdi-action-input'},
+		{id: '27', name: 'SIRIUS', 			icon: 'mdi-action-input'},
+		{id: '31', name: 'HDMI (cyclic)', 	icon: 'mdi-action-settings-input-hdmi'}
+	];
+
+	console.log($scope.inputs);
+
 	$scope.power = false;
 
 	$scope.volume = {
@@ -98,7 +128,7 @@ pioneerApp.controller('AmpliCtrl', function ($scope) {
 		};
 
 		response = response.replace(/(\r\n|\n|\r)/gm,"");
-
+		command = command.split('&')[0];
 		console.log(command);
 		console.log(response);
 
@@ -106,60 +136,52 @@ pioneerApp.controller('AmpliCtrl', function ($scope) {
 			case 'query_power':			
 				if (response == '0PWR0') { $scope.power = true; } else { $scope.power = false; }
 				break;
+			case 'set_input':
 			case 'query_input':
 				switch (response) {
-					case '0FN04':
-						$scope.video.current = 'DVD';
-						break;
-					case '0FN25':
-						$scope.video.current = 'BD';
-						break;
-					case '0FN05':
-						$scope.video.current = 'TV/SAT';
-						break;
-					case '0FN15':
-						$scope.video.current = 'DVR/BDR';
-						break;
-					case '0FN10':
-						$scope.video.current = 'VIDEO 1';
-						break;
-					case '0FN14':
-						$scope.video.current = 'VIDEO 2';
-						break;
-					case '0FN19':
-						$scope.video.current = 'HDMI 1';
-						break;
-					case '0FN20':
-						$scope.video.current = 'HDMI 2';
-						break;
-					case '0FN21':
-						$scope.video.current = 'HDMI 3';
-						break;
-					case '0FN22':
-						$scope.video.current = 'HDMI 4';
-						break;
-					case '0FN23':
-						$scope.video.current = 'HDMI 5';
-						break;
+					case '0FN04': $scope.video.current = 'DVD'; break;
+					case '0FN25': $scope.video.current = 'BD'; break;
+					case '0FN05': $scope.video.current = 'TV/SAT'; break;
+					case '0FN15': $scope.video.current = 'DVR/BDR'; break;
+					case '0FN10': $scope.video.current = 'VIDEO 1'; break;
+					case '0FN14': $scope.video.current = 'VIDEO 2'; break;
+					case '0FN19': $scope.video.current = 'HDMI 1'; break;
+					case '0FN20': $scope.video.current = 'HDMI 2'; break;
+					case '0FN21': $scope.video.current = 'HDMI 3'; break;
+					case '0FN22': $scope.video.current = 'HDMI 4'; break;
+					case '0FN23': $scope.video.current = 'HDMI 5'; break;
+					case '0FN26': $scope.video.current = 'HOME MEDIA GALLERY(Internet Radio)'; break;
+					case '0FN22': $scope.video.current = 'HDMI 4'; break;
+					case '0FN23': $scope.video.current = 'HDMI 5'; break;
+					case '0FN17': $scope.video.current = 'iPod/USB'; break;
+					case '0FN18': $scope.video.current = 'XM RADIO'; break;
+					case '0FN01': $scope.video.current = 'CD'; break;
+					case '0FN03': $scope.video.current = 'CD-R/TAPE'; break;
+					case '0FN02': $scope.video.current = 'TUNER'; break;
+					case '0FN00': $scope.video.current = 'PHONO'; break;
+					case '0FN12': $scope.video.current = 'MULTI CH IN '; break;
+					case '0FN33': $scope.video.current = 'ADAPTER PORT'; break;
+					case '0FN27': $scope.video.current = 'SIRIUS'; break;
+					case '0FN31': $scope.video.current = 'HDMI (cyclic)'; break;
 					default:
 						$scope.video.current = 'N/A';
 				}
 
 				/*
 
-				22: HDMI 4 ○ ○ ○○ ○ ○ ○ ×
-				23: HDMI 5 ○(Front) ○(Front) ○(Front) ○(Front)r○(Front) ○(Front) ×
-				26: HOME MEDIA GALLERY(Internet Radio) ○ ○ ○○ ○ ○○○
-				17: iPod/USB ○ ○ ○○ ○ ○○○
-				18: XM RADIO ○ ○ ○○ ○ ○ × ×
-				01: CD ○ ○ ○○ ○ ○○○
-				03: CD-R/TAPE ○ ○ ○○ ○ ○○○
-				02: TUNER ○ ○ ○○ ○ ○○○
-				00: PHONO ○ ○ × × × ×××
-				12: MULTI CH IN ○ ○ × × × ×××
-				33: ADAPTER PORT ○ ○ ○○ ○ ○○○
-				27: SIRIUS ○ ○ ○○ ○ ○○○
-				31: HDMI (cyclic)
+				case '0FN26': $scope.video.current = 'HOME MEDIA GALLERY(Internet Radio)'; break;
+				case '0FN22': $scope.video.current = 'HDMI 4'; break;
+				case '0FN23': $scope.video.current = 'HDMI 5'; break;
+				case '0FN17': $scope.video.current = 'iPod/USB'; break;
+				case '0FN18': $scope.video.current = 'XM RADIO'; break;
+				case '0FN01': $scope.video.current = 'CD'; break;
+				case '0FN03': $scope.video.current = 'CD-R/TAPE'; break;
+				case '0FN02': $scope.video.current = 'TUNER'; break;
+				case '0FN00': $scope.video.current = 'PHONO'; break;
+				case '0FN12': $scope.video.current = 'MULTI CH IN '; break;
+				case '0FN33': $scope.video.current = 'ADAPTER PORT'; break;
+				case '0FN27': $scope.video.current = 'SIRIUS'; break;
+				case '0FN31': $scope.video.current = 'HDMI (cyclic)'; break;
 
 				*/
 				break;

@@ -30,7 +30,6 @@
         <ul id="nav-mobile" class="side-nav">
           <li><a href="https://github.com/liorzoue/zo-ampli-pioneer"><i class="mdi-file-folder-shared"></i> {{version}}</a></li>
         </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
       </div>
     </div>
   </nav>
@@ -53,9 +52,21 @@
             <p>
               Entrée active : {{video.current}}
             </p>
-            <p>
-              Lorem
-            </p>
+            <div class="divider"></div>
+            <div class="row">
+              <div class="col m6 s12">
+              <ul class="collection blue-grey-text text-darken-1 white">
+                <li class=""><div class="row"><div class="m10 offset-m1"></div></div><div class="input-field">
+                  <i class="mdi-action-search prefix"></i>
+                  <input id="input_select" type="text" ng-model="q_input">
+                  <label for="input_select">Entrée</label>
+                </div></li>
+                <li class="collection-item" ng-repeat="input in inputs | filter:q_input as results"  ng-click="get('set_input&input='+input.id)">
+                  <div>{{input.name}}<a href="#!" class="secondary-content"><i class="{{input.icon}}"></i></a></div>
+                </li>
+              </ul>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -92,4 +103,10 @@
 
 
   <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/angular.min.js"></script>
+  <script src="js/init.js"></script>
+
+  </body>
+</html>

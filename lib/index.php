@@ -10,6 +10,8 @@ $Command = 'empty';
 // We get back the argument
 if (isset($_GET['do']) && ($_GET['do'] != null))
 	$do = $_GET['do'];
+if (isset($_GET['input']) && ($_GET['input'] != null))
+	$input = $_GET['input'];
 
 if (isset($do))
 {
@@ -106,7 +108,10 @@ if (isset($do))
 		{$Command = '?V';break;}
 
 		case "query_input" :
-		{$Command = '?F';break;}	
+		{$Command = '?F';break;}
+
+		case "set_input" :
+		{$Command = $input.'FN';break;}	
 
 	}
 	//Send command to VSX.
